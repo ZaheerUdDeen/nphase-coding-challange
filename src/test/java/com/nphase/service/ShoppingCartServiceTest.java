@@ -29,10 +29,10 @@ public class ShoppingCartServiceTest {
     public void calculatesPriceApplyingBulkItemRewardDiscount()  {
         ShoppingCart cart = new ShoppingCart(Arrays.asList(
                 new Product("Tea", BigDecimal.valueOf(5.0), 5, Product.ProductCategory.drinks),
-                new Product("Coffee", BigDecimal.valueOf(3.5), 3, Product.ProductCategory.drinks)
+                new Product("Coffee", BigDecimal.valueOf(3.5), 3, Product.ProductCategory.foods)
         ));
 
-        BigDecimal result = service.calculateTotalPrice(cart);
+        BigDecimal result = service.calculateTotalPriceAfterBulkRewardDiscount(cart);
 
         Assertions.assertEquals(result.setScale(1, RoundingMode.HALF_UP), BigDecimal.valueOf(33.0));
     }

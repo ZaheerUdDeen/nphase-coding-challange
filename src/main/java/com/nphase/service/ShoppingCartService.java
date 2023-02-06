@@ -19,7 +19,21 @@ public class ShoppingCartService {
                 .reduce(BigDecimal::add)
                 .orElse(BigDecimal.ZERO);
 
+        //Implement discount functionality independently, so that calculateTotalPrice should apply discount as well, where possible.
         return totalPrice.subtract(rewardDiscountOnBulkPurchase(shoppingCart.getProducts())).subtract(discountByCategory(shoppingCart.getProducts()));
+    }
+
+
+
+
+    public BigDecimal calculateTotalPriceAfterBulkRewardDiscount(ShoppingCart shoppingCart) {
+        BigDecimal totalPrice = shoppingCart.getProducts()
+                .stream()
+                .map(product -> product.getPricePerUnit().multiply(BigDecimal.valueOf(product.getQuantity())))
+                .reduce(BigDecimal::add)
+                .orElse(BigDecimal.ZERO);
+
+        return totalPrice.subtract(rewardDiscountOnBulkPurchase(shoppingCart.getProducts()));
     }
 
     /** TASK 2
