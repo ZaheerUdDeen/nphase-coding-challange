@@ -1,5 +1,6 @@
 package com.nphase.service;
 
+import com.nphase.config.DiscountConfiguration;
 import com.nphase.entity.Product;
 import com.nphase.entity.ShoppingCart;
 
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ShoppingCartService {
+
 
     public BigDecimal calculateTotalPrice(ShoppingCart shoppingCart) {
         BigDecimal totalPrice = shoppingCart.getProducts()
@@ -38,7 +40,7 @@ public class ShoppingCartService {
      * @return
      */
      public BigDecimal rewardDiscountOnBulkPurchase(final List<Product> lineItemProductInShoppingCart) {
-        return lineItemProductInShoppingCart.stream().filter(lineItemProduct -> lineItemProduct.getQuantity() > 3 ).map(product -> product.discountPrice(0.1))
+        return lineItemProductInShoppingCart.stream().filter(lineItemProduct -> lineItemProduct.getQuantity() > DiscountConfiguration.ItemAmount ).map(product -> product.discountPrice(DiscountConfiguration.discountPercentage))
                 .reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
     }
 
@@ -63,9 +65,9 @@ public class ShoppingCartService {
      */
     public BigDecimal discountByCategory(final List<Product> lineItemProductInShoppingCart) {
          return lineItemProductInShoppingCart.stream().collect(Collectors.groupingBy(Product::getCategory)).values()
-                 .stream().filter(products -> { return products.stream().mapToInt(product -> product.getQuantity()).sum() > 3;
+                 .stream().filter(products -> { return products.stream().mapToInt(product -> product.getQuantity()).sum() > DiscountConfiguration.ItemAmount;
                  }).map(products -> {
-                     return products.stream().map(product -> product.discountPrice(0.1))
+                     return products.stream().map(product -> product.discountPrice(DiscountConfiguration.discountPercentage))
                              .reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
                  }).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
     }
