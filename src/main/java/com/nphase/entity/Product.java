@@ -24,4 +24,9 @@ public class Product {
     public int getQuantity() {
         return quantity;
     }
+
+    public BigDecimal discountPrice(Double discountPercentage) {
+        BigDecimal totalPrice = this.pricePerUnit.multiply(BigDecimal.valueOf(this.quantity));
+       return totalPrice.multiply(BigDecimal.valueOf(discountPercentage));
+    }
 }
